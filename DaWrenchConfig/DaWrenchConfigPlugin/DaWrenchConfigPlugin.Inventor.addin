@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Addin Type="Plugin">
+  <ClassId>{1f37e3d6-b6c0-4526-a5cc-2d7790e3fe6f}</ClassId>
+  <ClientId>{1f37e3d6-b6c0-4526-a5cc-2d7790e3fe6f}</ClientId>
+  <DisplayName>DaWrenchConfigPlugin</DisplayName>
+  <Description>a DaWrenchConfigPlugin</Description>
+  <Assembly>DaWrenchConfigPlugin.dll</Assembly>
+</Addin>

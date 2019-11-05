@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ApplicationPackage SchemaVersion="1.0" Version="1.0" ProductCode="{1f37e3d6-b6c0-4526-a5cc-2d7790e3fe6f}" Name="DaWrenchConfigPlugin" Description="DaWrenchConfigPluginPlugin Plugin" Author="Inventor IO Dev">
+    <CompanyDetails Name="Autodesk, Inc" Phone="415.555.5555" Url="www.autodesk.com" Email="noreply@autodesk.com" />
+    <Components>
+        <!-- For Inventor Engine, "Platform" attribute must be "Inventor" -->
+        <RuntimeRequirements  OS="Win64" Platform="Inventor" />
+        <!-- For Inventor Plug-in, the "Module" attribute must point to the .addin manifest file. -->
+        <ComponentEntry LoadOnAutoCADStartup="False" LoadOnCommandInvocation="False"
+            AppDescription="DaWrenchConfigPlugin App Package."
+            ModuleName="./Contents/DaWrenchConfigPlugin.Inventor.addin" AppName="DaWrenchConfigPlugin"/>
+    </Components>
+    <EnvironmentVariables>
+    </EnvironmentVariables>
+</ApplicationPackage>
