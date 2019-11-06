@@ -19,8 +19,9 @@ namespace Interaction
         {
             new Command { Description = "Post app bundle",          Action = (publisher) => publisher.PostAppBundleAsync() },
             new Command { Description = "Post activity",            Action = (publisher) => publisher.PublishActivityAsync() },
-            new Command { Description = "Upload data set",            Action = (publisher) => publisher.UploadDataSetAsync() },
+            new Command { Description = "Upload data set",          Action = (publisher) => publisher.UploadDataSetAsync() },
             new Command { Description = "Run work item",            Action = (publisher) => publisher.RunWorkItemAsync() },
+            new Command { Description = "Get result",               Action = (publisher) => publisher.GetResultAsync() },
             new Command { Description = "List available engines",   Action = (publisher) => publisher.ListEnginesAsync() },
             new Command { Description = "Clean existing app bundle and activity",   Action = (publisher) => publisher.CleanExistingAppActivityAsync() },
         };

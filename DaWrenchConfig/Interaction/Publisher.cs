@@ -29,7 +29,8 @@ namespace Interaction
         private static string BucketKey { get; set; }
 
         private static string ParamFile { get; set; }
-
+        private static string ResultFile { get; set; }
+        private static string ResultDest { get; set; }
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -42,6 +43,8 @@ namespace Interaction
             ObjectName = configuration.GetValue<string>("ObjectName");
             BucketKey = configuration.GetValue<string>("BucketKey");
             ParamFile = configuration.GetValue<string>("ParamFile");
+            ResultFile = configuration.GetValue<string>("ResultFile");
+            ResultDest = configuration.GetValue<string>("ResultDest");
         }
 
         /// <summary>
@@ -103,7 +106,7 @@ namespace Interaction
             var wi = new WorkItem
             {
                 ActivityId = await GetFullActivityId(),
-                Arguments = GetWorkItemArgs(bucketKey, ObjectName, ParamFile,"result.zip", oauth.access_token) // !AA! Move output to config
+                Arguments = GetWorkItemArgs(bucketKey, ObjectName, ParamFile, ResultFile, oauth.access_token) 
             };
 
             // run WI and wait for completion
@@ -130,7 +133,45 @@ namespace Interaction
             Console.WriteLine();
         }
 
-        private async Task<string> GetFullActivityId()
+        public async Task GetResultAsync()
+        {
+            dynamic oauth = await OAuthController.GetInternalAsync();
+            var nickname = await GetNicknameAsync();
+
+            string bucketKey = nickname.ToLower() + BucketKey;
+
+            ObjectsApi objects = new ObjectsApi();
+            objects.Configuration.AccessToken = oauth.access_token;
+
+            // If old result exists remove it
+            string destFile = ResultDest + ResultFile;
+            if (File.Exists(destFile))
+            {
+                File.Delete(destFile);
+            }
+
+            // Make sure the local result directory exists before we copy the result over
+
+            if (!Directory.Exists(ResultDest))
+            {
+                Directory.CreateDirectory(ResultDest);
+            }
+
+            try
+            {
+                Stream stream =  (Stream) await objects.GetObjectAsync(bucketKey, "result.zip");
+                using (FileStream fileStream = new FileStream(destFile, FileMode.CreateNew))
+                {
+                    stream.CopyTo(fileStream);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error uploading data set: " + e.Message);
+            }
+        }
+
+            private async Task<string> GetFullActivityId()
         {
             string nickname = await GetNicknameAsync();
             return $"{nickname}.{Constants.Activity.Id}+{Constants.Activity.Label}";
@@ -193,7 +234,7 @@ namespace Interaction
                 dynamic result = buckets.CreateBucket(postBuckets);
                 //Console.WriteLine("bucket: " + result.ToString());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Most likely bucket already exists, we'll just skip this error and catch any real errors on upload
             }
@@ -207,7 +248,6 @@ namespace Interaction
             try
             {
                 var result = objects.UploadObject(bucketKey, objectName, contentLength, body);
-//                Console.WriteLine(result);
             }
             catch (Exception e)
             {
